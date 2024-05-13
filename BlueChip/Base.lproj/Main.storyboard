@@ -34,6 +34,7 @@
                     </view>
                     <connections>
                         <outlet property="BgFill" destination="p5q-nQ-D2E" id="kyG-kp-p0R"/>
+                        <outlet property="BgImage" destination="4QL-a4-vEY" id="NA0-bo-eiq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

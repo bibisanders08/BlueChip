@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		4ED2897B835B150C3B03E14E /* Pods_BlueChip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41953FF33A2874C772FBC626 /* Pods_BlueChip.framework */; };
 		84D807DF2BEF7D1C0000DF96 /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 84D807DE2BEF7D1C0000DF96 /* loading.json */; };
-		84D807E12BEF7D230000DF96 /* GoogleService-Info (54).plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D807E02BEF7D230000DF96 /* GoogleService-Info (54).plist */; };
+		84D807E12BEF7D230000DF96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D807E02BEF7D230000DF96 /* GoogleService-Info.plist */; };
 		84D807E62BEF7FAF0000DF96 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D807E52BEF7FAE0000DF96 /* MainView.swift */; };
 		84D807E82BEF7FBC0000DF96 /* BG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D807E72BEF7FBC0000DF96 /* BG.swift */; };
 		84D807EA2BEF7FC80000DF96 /* GalssyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D807E92BEF7FC80000DF96 /* GalssyCard.swift */; };
@@ -55,7 +55,7 @@
 /* Begin PBXFileReference section */
 		41953FF33A2874C772FBC626 /* Pods_BlueChip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BlueChip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D807DE2BEF7D1C0000DF96 /* loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading.json; sourceTree = "<group>"; };
-		84D807E02BEF7D230000DF96 /* GoogleService-Info (54).plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info (54).plist"; sourceTree = "<group>"; };
+		84D807E02BEF7D230000DF96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		84D807E22BEF7D600000DF96 /* BlueChip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BlueChip.entitlements; sourceTree = "<group>"; };
 		84D807E52BEF7FAE0000DF96 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		84D807E72BEF7FBC0000DF96 /* BG.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BG.swift; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 			children = (
 				84D807E42BEF7F650000DF96 /* Main */,
 				84D807E22BEF7D600000DF96 /* BlueChip.entitlements */,
-				84D807E02BEF7D230000DF96 /* GoogleService-Info (54).plist */,
+				84D807E02BEF7D230000DF96 /* GoogleService-Info.plist */,
 				84D807DE2BEF7D1C0000DF96 /* loading.json */,
 				84D807E32BEF7D6A0000DF96 /* APP */,
 				84F6A55B2BEF75A60034D22F /* Main.storyboard */,
@@ -286,7 +286,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84D807E12BEF7D230000DF96 /* GoogleService-Info (54).plist in Resources */,
+				84D807E12BEF7D230000DF96 /* GoogleService-Info.plist in Resources */,
 				84F6A5622BEF75A80034D22F /* LaunchScreen.storyboard in Resources */,
 				84F6A55F2BEF75A80034D22F /* Assets.xcassets in Resources */,
 				84D807DF2BEF7D1C0000DF96 /* loading.json in Resources */,
