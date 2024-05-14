@@ -211,11 +211,20 @@ class Helper: UIViewController, WKUIDelegate, WKNavigationDelegate, URLSessionDe
                             ])
                         }
                         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-                            let Url = URL(string: sourceData)
-                            webView.loadDiskCookies(for: (Url?.host!)!){
-                                decisionHandler(.allow)
+                                let url = navigationAction.request.url
+                                
+                                if let urlString = url?.absoluteString,
+                                   urlString.contains("://") && !urlString.hasPrefix("http") && !urlString.hasPrefix("https") {
+                                    UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+                                    decisionHandler(.cancel)
+                                    return
+                                }
+                                
+                                let Url = URL(string: sourceData)
+                                webView.loadDiskCookies(for: (Url?.host!)!) {
+                                    decisionHandler(.allow)
+                                }
                             }
-                        }
 
                         public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
                             let Url = URL(string: sourceData)
