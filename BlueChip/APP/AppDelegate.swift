@@ -7,32 +7,34 @@ import FirebaseCore
 import FirebaseAnalytics
 import UserNotifications
 import UserNotificationsUI
+import FirebaseMessaging
+//import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
     var orientationLock = UIInterfaceOrientationMask.all
     var timeZoneAbbreviationLocal: String {
         return TimeZone.current.abbreviation() ?? ""
     }
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-            return self.orientationLock
+        return self.orientationLock
     }
     func timeZoneCurrent() -> String {
         return TimeZone.current.identifier
     }
-
+    
     let codeLanguageLocalized = NSLocale.current.languageCode
-
+    
     var oldAndNotWorkingNames: [String : Any] = [:]
     var dataAttribution: [String : Any] = [:]
     var deepLinkParameterFB: String = ""
     var uniqueIdentifierAppsFlyer: String = ""
-
+    
     var identifierAdvertising: String = ""
     var tokenPushNotification: String = ""
-
+    
     let StartUp = ViewController()
     let pushNotificationJoo = JooPush()
     
@@ -42,11 +44,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var subject4 = ""
     var subject5 = ""
     var oneLinkDeepLink = ""
-
+    
     var geographicalNameTimeZone: String = ""
     var abbreviationTimeZone: String = ""
     var applicationLocalized: String = ""
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         geographicalNameTimeZone = timeZoneCurrent()
         abbreviationTimeZone = timeZoneAbbreviationLocal
@@ -58,12 +60,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppsFlyerLib.shared().deepLinkDelegate = self
         AppsFlyerLib.shared().delegate = self
         uniqueIdentifierAppsFlyer = AppsFlyerLib.shared().getAppsFlyerUID()
-
+        
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
-
+        
         self.createFacebook()
         self.createGoogleFirebase()
-
+        
         return true
     }
     func createFacebook() {
@@ -98,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 @unknown default:
                     print("Unknown")
                 }
-
+                
                 DispatchQueue.main.async {
                     if let rootViewController = self.window?.rootViewController as? ViewController {
                         rootViewController.modalPresentationStyle = .fullScreen
@@ -113,9 +115,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         AppsFlyerLib.shared().continue(userActivity, restorationHandler: nil)
-
+        
         return true
-
+        
     }
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         ApplicationDelegate.shared.application(app, open: url, sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
@@ -133,6 +135,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         let token = tokenParts.joined()
         tokenPushNotification = token
+        //mess
+        Messaging.messaging().apnsToken = deviceToken
+        
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("Error fetching FCM registration token: \(error)")
+            } else if let token = token {
+                print("FCM registration token: \(token)")
+            }
+        }
     }
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
     }
@@ -232,13 +244,13 @@ extension AppDelegate: DeepLinkDelegate {
         }
     }
 }
-class JooPush : NSObject, UNUserNotificationCenterDelegate {
-
+class JooPush : NSObject, UNUserNotificationCenterDelegate, MessagingDelegate {
+    
     let notificationCenter = UNUserNotificationCenter.current()
     func requestAutorization() {
         notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
-           
-
+            
+            
             guard granted else { return }
             self.getNotificationSettings()
         }
@@ -247,33 +259,46 @@ class JooPush : NSObject, UNUserNotificationCenterDelegate {
         notificationCenter.getNotificationSettings { (settings) in
             
             guard settings.authorizationStatus == .authorized else { return }
-
+            
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()
             }
         }
     }
+    
     func userNotificationCenter(
-            _ center: UNUserNotificationCenter,
-            willPresent notification: UNNotification,
-            withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-                if #available(iOS 14.0, *) {
-                    let description = notification.request.content.categoryIdentifier.description
-                    if description == "purchase" {
-                        AppEvents.shared.logEvent(AppEvents.Name.purchased, parameters: [AppEvents.ParameterName.description:description])
-                        print("\n Recived Purchase: \(description) \n")
-                    } else if description == "registration" {
-                        AppEvents.shared.logEvent(AppEvents.Name.completedRegistration , parameters: [AppEvents.ParameterName.description:description])
-                        print("\n Recived Registartion: \(description) \n")
-                    } else if description == "contact" {
-                        AppEvents.shared.logEvent(AppEvents.Name.contact , parameters: [AppEvents.ParameterName.description:description])
-                        print("\n Recived Registartion: \(description) \n")
-                    }
-                    
-                    completionHandler([.banner, .sound, .badge, .list])
-                } else {
-                    completionHandler([.alert, .sound])
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+            if #available(iOS 14.0, *) {
+                let description = notification.request.content.categoryIdentifier.description
+                if description == "purchase" {
+                    AppEvents.shared.logEvent(AppEvents.Name.purchased, parameters: [AppEvents.ParameterName.description:description])
+                    print("\n Recived Purchase: \(description) \n")
+                } else if description == "registration" {
+                    AppEvents.shared.logEvent(AppEvents.Name.completedRegistration , parameters: [AppEvents.ParameterName.description:description])
+                    print("\n Recived Registartion: \(description) \n")
+                } else if description == "contact" {
+                    AppEvents.shared.logEvent(AppEvents.Name.contact , parameters: [AppEvents.ParameterName.description:description])
+                    print("\n Recived Registartion: \(description) \n")
                 }
+                
+                completionHandler([.banner, .sound, .badge, .list])
+            } else {
+                completionHandler([.alert, .sound])
             }
+        }
+    
+    //mess
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        guard let token = fcmToken else { return }
+        print("Firebase registration token: \(token)")
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        print("USER INFO: \(userInfo)")
+        completionHandler(.newData)
+    }
 }
 

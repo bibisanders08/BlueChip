@@ -14,7 +14,7 @@ class ViewController: UIViewController, URLSessionDelegate {
     let bundleIdentifier = Bundle.main.bundleIdentifier
     var pathIdentifier = ""
     var idUserNumber = ""
-    
+    let circleLayer = CAShapeLayer()
     var progressValue : Float = 0
     var animationView = Lottie.LottieAnimationView()
     
@@ -22,15 +22,52 @@ class ViewController: UIViewController, URLSessionDelegate {
         super.viewDidLoad()
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        animationView.animation = .named("loading")
-        animationView.contentMode = .scaleAspectFill
-        animationView.frame = CGRect(x: 60 , y: view.bounds.height / 2 - 150, width: 300, height: 300 )
-        animationView.loopMode = .loop
-        animationView.contentMode = .scaleToFill
-        animationView.animationSpeed = 1
-        view.addSubview(animationView)
-        animationView.play()
+            let screenWidth = UIScreen.main.bounds.width
+            let screenHeight = UIScreen.main.bounds.height
+            
+            let imageView = UIImageView(image: UIImage(named: "crown"))
+            imageView.contentMode = .scaleAspectFit
+            view.addSubview(imageView)
+            
+            let imageSize: CGFloat = 100
+            imageView.frame = CGRect(x: (screenWidth - imageSize) / 2, y: (screenHeight - imageSize) / 2, width: imageSize, height: imageSize)
+            
+            animateImage(imageView: imageView)
+        
+            let animationView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+            animationView.center = view.center
+            view.addSubview(animationView)
+            
+            let radius: CGFloat = 80
+            let circularPath = UIBezierPath(arcCenter: CGPoint(x: animationView.bounds.midX, y: animationView.bounds.midY), radius: radius, startAngle: -CGFloat.pi / 2, endAngle: 3 * CGFloat.pi / 2, clockwise: true)
+            circleLayer.path = circularPath.cgPath
+            circleLayer.strokeColor = UIColor.systemPink.cgColor
+            circleLayer.fillColor = UIColor.clear.cgColor
+            circleLayer.lineWidth = 5
+            circleLayer.strokeStart = 0
+            circleLayer.strokeEnd = 0
+            animationView.layer.addSublayer(circleLayer)
+            
+            animateCircle(circleLayer: circleLayer)
     }
+    
+    func animateCircle(circleLayer: CAShapeLayer) {
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        animation.fromValue = 0
+        animation.toValue = 1
+        animation.duration = 2
+        animation.fillMode = .forwards
+        animation.isRemovedOnCompletion = false
+        animation.delegate = self
+        circleLayer.add(animation, forKey: "strokeEndAnimation")
+    }
+    
+    func animateImage(imageView: UIImageView) {
+        UIView.animate(withDuration: 1.0, delay: 0.0, options: [.autoreverse, .repeat], animations: {
+            imageView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        }, completion: nil)
+    }
+    
     func startLoading() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             if self.pathIdentifier == ""{
@@ -143,7 +180,7 @@ class ViewController: UIViewController, URLSessionDelegate {
         task.resume()
     }
     override var prefersStatusBarHidden: Bool {
-        return true
+        return false
     }
 }
 
@@ -186,3 +223,17 @@ struct AppUtility {
     }
 }
 
+
+extension ViewController: CAAnimationDelegate {
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        if flag {
+            let animation = CABasicAnimation(keyPath: "strokeStart")
+            animation.fromValue = 0
+            animation.toValue = 1
+            animation.duration = 2
+            animation.fillMode = .forwards
+            animation.isRemovedOnCompletion = false
+            circleLayer.add(animation, forKey: "strokeStartAnimation")
+        }
+    }
+}

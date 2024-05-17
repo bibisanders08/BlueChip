@@ -10,6 +10,7 @@ target 'BlueChip' do
    pod 'lottie-ios'
    pod 'FirebaseAnalytics'  
    pod 'RealmSwift'
+   pod 'FirebaseMessaging'
 
 
   # Pods for BlueChip
