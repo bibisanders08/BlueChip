@@ -95,8 +95,12 @@ class Helper: UIViewController, WKUIDelegate, WKNavigationDelegate, URLSessionDe
         navigationController?.setToolbarHidden(false, animated: true)
         view.addSubview(uiToolBar)
         uiToolBar.tintColor = .white
-        uiToolBar.barTintColor = .black
-        uiToolBar.translatesAutoresizingMaskIntoConstraints = false
+                uiToolBar.isTranslucent = true
+                uiToolBar.setBackgroundImage(UIImage(named: "barColor"), forToolbarPosition: .bottom, barMetrics: .default)
+
+                
+                uiToolBar.isTranslucent = true
+                uiToolBar.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 11.0, *) {
             let guide = self.view.safeAreaLayoutGuide
             uiToolBar.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
